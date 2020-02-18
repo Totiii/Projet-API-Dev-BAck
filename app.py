@@ -75,22 +75,27 @@ def verify_token(token):
 @app.route('/book/new/', methods=['POST'])
 @auth.login_required
 def new_book():
-    isbn = request.args.get("isbn")
-    name = request.args.get("name")
-    release_date = dateparser.parse(request.args.get("release_date"))
-    type = request.args.get("type")
-    author = request.args.get("author")
-    book = Book(isbn=isbn, author=author, name=name, release_date=release_date, type=type)
-    db.session.add(book)
+    isbn = request.args.get("isbn") or None
+    name = request.args.get("name") or None
+    release_date = request.args.get("release_date") or None
+    type = request.args.get("type") or None
+    author = request.args.get("author") or None
 
-    try:
-        db.session.commit()
-        return jsonify({"status": True, 'bookID': book.id, 'bookISBN': book.isbn})
-    except exc.IntegrityError as e:
-        return jsonify({"status": False, 'error': "A book with the same ISBN is already register in database"}), 201
-    except exc.SQLAlchemyError as e:
-        print(e)
-        return jsonify({"status": False})
+    if isbn and name and register and type and author:
+        release_date = dateparser.parse(request.args.get("release_date"))
+        book = Book(isbn=isbn, author=author, name=name, release_date=release_date, type=type)
+        db.session.add(book)
+
+        try:
+            db.session.commit()
+                return jsonify({"status": True, 'bookID': book.id, 'bookISBN': book.isbn}), 201
+        except exc.IntegrityError as e:
+            return jsonify({"status": False, "error": "book_already_register", 'error_msg': "A book with the same ISBN is already register in database"}), 409
+        except exc.SQLAlchemyError as e:
+            print(e)
+            return jsonify({"status": False})
+    else:
+        return jsonify({"status": False, 'error': "missing_arg"}), 410
 
 
 # Delete book by isbn
