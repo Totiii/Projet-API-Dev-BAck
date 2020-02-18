@@ -214,20 +214,12 @@ def edit_book():
 @app.route('/book/count/', methods=['GET'])
 @auth.login_required
 def get_nb_book():
+    type = request.args.get("category") or None
     try:
-        book = Book.query.count()
-    except exc.SQLAlchemyError as e:
-        print(e)
-        return jsonify({"status": False})
-
-    return jsonify({"result": book})
-
-#Get count all book by category/type
-@app.route('/book/count/', methods=['GET'])
-def get_nb_book_by_categ():
-    type = request.args.get("category")
-    try:
-        book = Book.query.filter_by(type=type).count()
+        if type:
+            book = Book.query.filter_by(type=type).count()
+        else:
+            book = Book.query.count()
     except exc.SQLAlchemyError as e:
         print(e)
         return jsonify({"status": False})
