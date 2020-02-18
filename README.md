@@ -21,7 +21,9 @@ Documentation d'utilisation: https://mathyeu.gitbook.io/api-flask/
 ### Ajouter la variable d'environement
 
     Mac : $ export FLASK_APP=app.py
-    Windows : $ set FLASK_APP=app.py
+    Windows : 
+     - Terminal : $ set FLASK_APP=app.py
+     - Powershell : $env:FLASK_APP = "app.py"
     
 ### Démarrage  du serveur
     
