@@ -82,7 +82,7 @@ def new_book():
 
     if isbn and name and register and type and author:
         release_date = dateparser.parse(request.args.get("release_date"))
-        book = Book(isbn=isbn, author=author, name=name, release_date=release_date, type=type)
+        book = Book(isbn=isbn, author=author, name=name, release_date=release_date, type=type.lower())
         db.session.add(book)
 
         try:
@@ -142,7 +142,7 @@ def get_book():
             return jsonify({"status": False})
 
         return jsonify({"status": True, "isbn": book.isbn, "name": book.name, "author": book.author,
-                        "release_date": book.release_date}), 200
+                        "release_date": book.release_date, "type": book.type}), 200
 
     else:
         return jsonify({"status": False, "error" : "isbn_not_found"}), 410
@@ -151,16 +151,22 @@ def get_book():
 @app.route('/book/all/', methods=['GET'])
 def get_all_books():
     books = []
+    type = request.args.get("category") or None
     try:
-        res = Book.query.all()
+        if type:
+            res = Book.query.filter_by(type=type.lower())
+        else:
+            res = Book.query.all()
+            
         for book in res:
             books.append({"isbn": book.isbn, "name": book.name, "author": book.author,
-                        "release_date": book.release_date})
+                        "release_date": book.release_date, "type": book.type})
     except exc.SQLAlchemyError as e:
         print(e)
         return jsonify({"status": False})
 
     return jsonify(books), 200
+
 
 
 
