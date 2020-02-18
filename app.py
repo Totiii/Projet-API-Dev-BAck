@@ -41,14 +41,13 @@ class User(db.Model):
 #Get all users
 users = User.query.all()
 
-
 class Book(db.Model):
     __tablename__ = 'book'
     id = db.Column(db.Integer, primary_key=True)
     isbn = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(120), nullable=False)
     author = db.Column(db.String(255), nullable=False)
-    release_date = db.Column(db.Date(), nullable=True)
+    release_date = db.Column(db.String(10), nullable=True)
     type = db.Column(db.String(), nullable=False)
 
     def __repr__(self):
@@ -142,18 +141,32 @@ def get_book():
     else:
         return jsonify({"status": False, "error" : "isbn_not_found"}), 410
 
+#Get all books
+@app.route('/book/all/', methods=['GET'])
+def get_all_books():
+    books = []
+    try:
+        res = Book.query.all()
+        for book in res:
+            books.append({"isbn": book.isbn, "name": book.name, "author": book.author,
+                        "release_date": book.release_date})
+    except exc.SQLAlchemyError as e:
+        print(e)
+        return jsonify({"status": False})
+
+    return jsonify({"status": True, 'books': books}), 200
+
+
 
 #Edit book info by isbn
 @app.route('/book/edit/', methods=['PATCH'])
 def edit_book():
 
     isbn = request.args.get("isbn")
-
     req_name = request.args.get("name") or None
     req_release_date = request.args.get("release_date") or None
     req_type = request.args.get("type") or None
     req_author = request.args.get("author") or None
-
 
     if not (re.search(''+
                         '^(?:ISBN(?:-1[03])?:?●)?(?=[0-9X]{10}$|(?=(?:[0-9]+[-●]){3})'+
