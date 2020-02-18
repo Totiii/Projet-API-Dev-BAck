@@ -88,7 +88,7 @@ def new_book():
 
         try:
             db.session.commit()
-                return jsonify({"status": True, 'bookID': book.id, 'bookISBN': book.isbn}), 201
+            return jsonify({"status": True, 'bookID': book.id, 'bookISBN': book.isbn}), 201
         except exc.IntegrityError as e:
             return jsonify({"status": False, "error": "book_already_register", 'error_msg': "A book with the same ISBN is already register in database"}), 409
         except exc.SQLAlchemyError as e:
