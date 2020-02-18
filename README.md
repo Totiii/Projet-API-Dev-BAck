@@ -29,13 +29,5 @@ Documentation d'utilisation: https://mathyeu.gitbook.io/api-flask/
     
     $ flask run
 
-### Migration de base de données (optionnel)
-
-
-    $ flask db migrate
-
-    $ flask db upgrade
-https://flask-migrate.readthedocs.io/en/latest/#why-use-flask-migrate-vs-alembic-directly
-
 > Thibaud POMMIER 
 > Mathieu AUGAIN
