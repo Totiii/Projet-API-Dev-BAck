@@ -231,7 +231,6 @@ def get_nb_book_by_categ():
 
 # Users
 
-
 # Auth user
 @app.route('/auth/login', methods=['POST'])
 def login():
@@ -249,25 +248,38 @@ def login():
     else:
         return jsonify({"status": False, 'error': 'bad_login'}), 410
 
+
+regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+
+def check(email):
+    if (re.search(regex, email)):
+        return True
+    else:
+        return False
+
 # Register user
 @app.route('/auth/register', methods=['POST'])
 def register():
     mail = request.args.get("mail")
-    password = request.args.get("password")
-    hashed_password = generate_password_hash(password)
+    if (check(mail) == True):
+        password = request.args.get("password")
+        hashed_password = generate_password_hash(password)
 
-    user = User(email=mail, password=hashed_password)
-    db.session.add(user)
+        user = User(email=mail, password=hashed_password)
+        db.session.add(user)
 
-    try:
-        db.session.commit()
-        return jsonify({"status": True, 'userID': user.id}), 201
-    except exc.SQLAlchemyError as e:
-        print(e)
-        if(type(e).__name__):
-            return jsonify({"status": False, "error": "email_already_exists" }), 406
-        else:
-            return jsonify({"status": False, "error": type(e).__name__ }), 410
+        try:
+            db.session.commit()
+            return jsonify({"status": True, 'userID': user.id}), 201
+        except exc.SQLAlchemyError as e:
+            print(e)
+            if (type(e).__name__):
+                return jsonify({"status": False, "error": "email_already_exists"}), 406
+            else:
+                return jsonify({"status": False, "error": type(e).__name__}), 410
+    else:
+        return jsonify({"status": False, "error": 'bad_format', 'message': 'Bad email format'}), 410
+
 
 # Get user by id
 @app.route('/user/get/', methods=['GET'])
