@@ -160,7 +160,7 @@ def get_all_books():
         print(e)
         return jsonify({"status": False})
 
-    return jsonify({"status": True, 'books': books}), 200
+    return jsonify(books), 200
 
 
 
