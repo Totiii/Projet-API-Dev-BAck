@@ -246,7 +246,10 @@ def register():
         return jsonify({"status": True, 'userID': user.id}), 201
     except exc.SQLAlchemyError as e:
         print(e)
-        return jsonify({"status": False, "error": type(e).__name__ }), 410
+        if(type(e).__name__):
+            return jsonify({"status": False, "error": "email_already_exists" }), 406
+        else:
+            return jsonify({"status": False, "error": type(e).__name__ }), 410
 
 # Get user by id
 @app.route('/user/get/', methods=['GET'])
