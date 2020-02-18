@@ -8,7 +8,7 @@ Documentation d'utilisation: https://mathyeu.gitbook.io/api-flask/
 
 ### Clonage du projet
 
-    $ git clone git@git.ynov-bordeaux.com:mathieu/projetapi.git
+    $ git clone git@github.com:Totiii/Projet-API-Dev-BAck.git
     
 ### Pré-requis
 - Python : https://www.python.org/downloads/
