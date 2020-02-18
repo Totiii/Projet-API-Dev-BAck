@@ -18,8 +18,13 @@ Documentation d'utilisation: https://mathyeu.gitbook.io/api-flask/
 
     $ pip install -r requirements.txt
     
-### Démarrage  du serveur
+### Ajouter la variable d'environement
 
+    Mac : $ export FLASK_APP=app.py
+    Windows : $ set FLASK_APP=app.py
+    
+### Démarrage  du serveur
+    
     $ flask run
 
 ### Migration de base de données (optionnel)
